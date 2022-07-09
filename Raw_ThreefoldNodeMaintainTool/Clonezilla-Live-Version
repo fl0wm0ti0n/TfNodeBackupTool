@@ -1,0 +1,3 @@
+clonezilla-live-20220616
+This Clonezilla live zip file was created by this command:
+ocs-live-dev -g en_US.UTF-8 -k de -s -c -a syslinux

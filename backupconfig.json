@@ -1,0 +1,39 @@
+{
+    "useconfig":true,
+    "farmId":403,
+    "_comment1": "tries to get NodeId connected with the mac from NIC over the graphQL API, you can enter it manually if it doesnt find it or it chooses to name after DateTime.",
+    "tryGetNodeNrFromGrid":true,
+    "_comment2": "Use DateTime as naming",
+    "useDateTimeNaming":false,
+    "_comment3": "empty is disabled, put chmod modus in here",
+    "chmod":777,
+    "_comment4": "empty is disabled, put username in here",
+    "chown":"user",
+    "_comment5": "timeout for inputs",
+    "timeout":30,
+    "_comment6": "possible is usb,scp,cifs,ftp",
+    "backupTarget":"scp",
+    "remotes":[
+        {
+            "remoteType":"scp",
+            "user":"user",
+            "password":"password",
+            "connectionString":"10.0.0.2",
+            "remotePath":"/tmp/"
+        },
+        {
+            "remoteType":"ftp",
+            "user":"user",
+            "password":"password",
+            "connectionString":"10.0.0.2",
+            "remotePath":"/tmp/"
+        },
+        {
+            "remoteType":"cifs",
+            "user":"user",
+            "password":"password",
+            "connectionString":"//10.0.0.2/Daten",
+            "remotePath":"/Backups/NodeBackups/"
+        }
+    ]
+}
