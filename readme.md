@@ -66,13 +66,31 @@ There are following preconfigured menuentries after booting the tool
 8.  Run FreeDOS
     1.  Startparameters: `initrd=/live/freedos.img`
 
-## how to start
+## Getting started
+The easiest way is to simply use the already done files uploaded under release
+to create a bootable device 
+
 
 ### ISO File
 
 ### USB Key
 
 ### PXE Server
+I've tested it with teh DRBL(PXE) Debian server ([DRBL HowTo](https://drbl.org/installation/))
+
+After you have installed the DRBL Server like in the url described you have to...
+
+Download the files...
+
+1. [vmlinuz](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/vmlinuz)
+2. [initrd.img](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/initrd.img)
+3. [filesystem.squashfs](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/filesystem.squashfs)
+
+...and copy them to /srv/tftp/tftpboot/nbi_img/pxelinux.cfg/default
+
+Next download the menue pxelinux.cfg and copy it to /srv/tftp/tftpboot/nbi_img/ \
+Change the address pxelinux.cfg "fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs"
+
 
 ## default options
 
