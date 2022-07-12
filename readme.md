@@ -1,6 +1,12 @@
-# TfNodeBackupTool
+# Threefold NodeMaintainTool
 Tool to maintain your Threefold Nodes 
+This Tool uses sources from Clonezilla as base!
+clonezilla.org, clonezilla.nchc.org.tw
+THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY! USE AT YOUR OWN RISK!
 
+Some Features are only tested with virtual nodes! Feel free to test it or to help in any kind! Any ideas are welcome! Thanks!
+\
+\
 Features:
 - [x] Nice Isolinux menue
 - [x] Script startparameters 
@@ -18,9 +24,55 @@ Features:
   - [x] Is automatically choosing DateTime as Backupname if no NodeID is present.
 - [x] json configuration for automatically backupping the nodeseed
 
+
 ## intro
-This is a collection of scripts which are made bootable together with Clonezilla, and  a nice Isolinux menue.
-Mainly you can boot it with an USB-Key, a PXE-Server or as ISO for example as Virtual Disk over an server Webinterface like ILO from HPE 
+This is a collection of scripts which are made bootable together with Clonezilla, and a nice Isolinux menue. You can backup your nodeseed, this is a tiny file on one of your nodedisks. It is used to identify your node. You can use that file to recreate your node elswhere. Or if you want to wipe all your disks so you can rfestore your node again. Furthermore you can wipe all your disks full automated, make a memorytest or just go into the shell to make your own stuff.
+
+The aim is to boot it with an USB-Key, a PXE-Server or as ISO for example as Virtual Disk over an server Webinterface like iLO from HPE 
+
+there are some nice features like, it searches in the ThreeFold GraphQL API for your Nodename. Or you can preconfigure a config.json so you dont have to enter something and the backup will be full automated. Put that on to a PXE-Server and you can backup over a hundred nodes just with one click.
+
+If you just want to quick backup or wipe some nodes just download the ISO file and use it with an USb-key or you use one of the nice virtual media functions of one of the server-managers out there (iLO, iDRAC, IMM).
+
+## Getting started
+The easiest way is to simply use the already done files uploaded under [release](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/release)
+To create a bootable device out of an image or an iso i can recommend [balenaEtcher](https://www.balena.io/etcher/)
+
+### ISO File
+Is used to create an USB-Key, burn a CD or to boot it over the boot-virtualmedia function from one of the server-managers out there (iLO, iDRAC, IMM).
+
+Just boot your server with it.
+
+### PXE Server
+I've tested it with teh DRBL(PXE) Debian server ([DRBL HowTo](https://drbl.org/installation/))
+
+After you have installed the DRBL Server like in the url described you have to...
+
+Download the files...
+
+1. [vmlinuz](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/vmlinuz)
+2. [initrd.img](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/initrd.img)
+3. [filesystem.squashfs](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/filesystem.squashfs)
+
+...and copy them to `/srv/tftp/tftpboot/nbi_img/` 
+
+Next download the menue [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/BackupToolMenue/de_layout/pxelinux.cfg) rename it to `default` and copy it to `/srv/tftp/tftpboot/nbi_img/pxelinux.cfg/`, at end it should be like `/srv/tftp/tftpboot/nbi_img/pxelinux.cfg/default` \
+Change the address pxelinux.cfg `fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs` and `ocs_prerun="busybox tftp -g -r backupnode.sh -l /tmp/backupnode.sh <IPAdress of the PXE Server>"`
+
+## Backup targets
+
+### SCP
+Is simple to use if you want to backup the nodeseeds to a linux host. Mainly you need to allow ssh access
+
+### CIFS (SMB)
+Is simple to use if you want to backup the nodeseeds to a windows host. Mainly you need to share an folder over network
+Many Unix NAS-distros allow that too, I for example use an [OMV Server](https://www.openmediavault.org/) for all my file things in my network. 
+
+### USB
+coming soon
+
+## default menue options
+The default isolinux menue is just a collection of different start parameters with which the script is started.
 
 There are following preconfigured menuentries after booting the tool
 
@@ -66,36 +118,91 @@ There are following preconfigured menuentries after booting the tool
 8.  Run FreeDOS
     1.  Startparameters: `initrd=/live/freedos.img`
 
-## Getting started
-The easiest way is to simply use the already done files uploaded under release
-to create a bootable device 
 
+## the "backupnode.sh" script's parameters'
+You can start the script as you want... or change the parameters if you are in the isolinux menue hit "tab" and enter somethign new.
 
-### ISO File
-
-### USB Key
-
-### PXE Server
-I've tested it with teh DRBL(PXE) Debian server ([DRBL HowTo](https://drbl.org/installation/))
-
-After you have installed the DRBL Server like in the url described you have to...
-
-Download the files...
-
-1. [vmlinuz](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/vmlinuz)
-2. [initrd.img](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/initrd.img)
-3. [filesystem.squashfs](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/filesystem.squashfs)
-
-...and copy them to /srv/tftp/tftpboot/nbi_img/pxelinux.cfg/default
-
-Next download the menue pxelinux.cfg and copy it to /srv/tftp/tftpboot/nbi_img/ \
-Change the address pxelinux.cfg "fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs"
-
-
-## default options
-
-## configure it as you wish
+```
+Syntax: backupnode.sh [options][targets][parameters]"
+at least one of the option
+s b,q,c,m must be specified"
+at least one of the targets u,s,f must be specified"
+OPTIONS:"
+h -> This helptext"
+q -> Just backup with all params we have without asking user (parameters have to be passed to script e.g. thru isolinux config)"
+b -> Backup and try to get all necessary infos from all given sources and ask user if some infos are missing"
+c -> Preconfigured backup, tries to get all necessary infos out of file located in /run/live/medium/live/backupnode.config.json"
+m -> Backup on my own (shell)"
+TARGETS:"
+u -> Backuptarget = USB -> NOT IMPLEMENTED AT THE MOMENT <-"
+s -> Backuptarget = SCP (you must also specify SCP parameters)"
+f -> Backuptarget = CIFS (you must also specify CIFS parameters)"
+PARAMETERS:"
+n -> nodeId for the naming of the backupfile (write < -n 'date'> of you want to use actual datetime for naming)"
+     [ -n <node id> ] | [ -n date ]"
+d -> chmod the backupfile to 777 (default disabled)"
+o -> chown the backupfile to a user (default disabled)"
+     -o <user>"
+t -> scp or cifs target string like //10.0.0.2 or 10.0.0.2"
+     -t <address>"
+a -> scp or cifs user"
+     -p <password>"
+p -> scp or cifs password"
+     -p <password>"
+r -> scp or cifs remotepath"
+     -r </tmp/folder/>"
+y -> Turn on config file for -q and -b options or Overwrite the location of the json configfile as described in option -c"
+     [ -y /tmp/folder/file.json ]|[ -y ]"
+x -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming, set your farmID"
+     -x <farm id>"
+z -> timeout for user inputs in seconds (default 30)"
+     -z <seconds>"
+```
 
 ## preconfigure it for full automation
+If you want to full automate your backup. just fill in in the backupnode.json
+
+```json
+{
+    "useconfig":true,
+    "farmId":403,
+    "_comment1": "tries to get NodeId connected with the mac from NIC over the graphQL API, you can enter it manually if it doesnt find it or it chooses to name after DateTime.",
+    "tryGetNodeNrFromGrid":true,
+    "_comment2": "Use DateTime as naming",
+    "useDateTimeNaming":false,
+    "_comment3": "empty is disabled, put chmod modus in here",
+    "chmod":777,
+    "_comment4": "empty is disabled, put username in here",
+    "chown":"user",
+    "_comment5": "timeout for inputs",
+    "timeout":30,
+    "_comment6": "possible is usb,scp,cifs,ftp",
+    "backupTarget":"scp",
+    "remotes":[
+        {
+            "remoteType":"scp",
+            "user":"user",
+            "password":"password",
+            "connectionString":"10.0.0.2",
+            "remotePath":"/tmp/"
+        },
+        {
+            "remoteType":"ftp",
+            "user":"user",
+            "password":"password",
+            "connectionString":"10.0.0.2",
+            "remotePath":"/tmp/"
+        },
+        {
+            "remoteType":"cifs",
+            "user":"user",
+            "password":"password",
+            "connectionString":"//10.0.0.2/Daten",
+            "remotePath":"/Backups/NodeBackups/"
+        }
+    ]
+}
+```
 
 ## HowTo create a custom CloneZilla whit your ownm scripts?
+coming soon..
