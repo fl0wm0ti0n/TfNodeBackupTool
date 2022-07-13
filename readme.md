@@ -1,13 +1,17 @@
 # Threefold NodeMaintainTool
-Tool to maintain your Threefold Nodes 
-This Tool uses sources from Clonezilla as base!
-clonezilla.org, clonezilla.nchc.org.tw
-THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY! USE AT YOUR OWN RISK!
-
-Some Features are only tested with virtual nodes! Feel free to test it or to help in any kind! Any ideas are welcome! Thanks!
+Tool to maintain your Threefold Nodes.\
+This Tool uses sources from Clonezilla as base!\
+clonezilla.org, clonezilla.nchc.org.tw\
+THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY! USE AT YOUR OWN RISK!\
+\
+Some Features are only tested with virtual nodes! Feel free to test it or to help in any kind! Any ideas are welcome! Thanks!\
 \
 \
 Features:
+- [x] backup nodeseed
+- [x] wipe disks
+- [x] shell
+- [x] memorytest
 - [x] Nice Isolinux menue
 - [x] Script startparameters 
 - [x] boot as ISO
@@ -58,6 +62,19 @@ Download the files...
 
 Next download the menue [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/BackupToolMenue/de_layout/pxelinux.cfg) rename it to `default` and copy it to `/srv/tftp/tftpboot/nbi_img/pxelinux.cfg/`, at end it should be like `/srv/tftp/tftpboot/nbi_img/pxelinux.cfg/default` \
 Change the address pxelinux.cfg `fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs` and `ocs_prerun="busybox tftp -g -r backupnode.sh -l /tmp/backupnode.sh <IPAdress of the PXE Server>"`
+
+
+#### Set up your PXE Server
+apt-get update
+apt-get install tftpd-hpa
+
+cd /srv/tftp/
+wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/netboot.tar.gz
+wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/pxelinux.0
+tar -xvzf netboot.tar.gz
+rm version.info netboot.tar.gz
+service tftpd-hpa restart
+
 
 ## Backup targets
 
