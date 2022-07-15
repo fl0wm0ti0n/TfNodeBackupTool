@@ -34,7 +34,7 @@ This is a collection of scripts which are made bootable together with Clonezilla
 
 The aim is to boot it with an USB-Key, a PXE-Server or as ISO for example as Virtual Disk over an server Webinterface like iLO from HPE 
 
-there are some nice features like, it searches in the ThreeFold GraphQL API for your Nodename. Or you can preconfigure a config.json so you dont have to enter something and the backup will be full automated. Put that on to a PXE-Server and you can backup over a hundred nodes just with one click.
+There are some nice features like, it searches in the ThreeFold GraphQL API for your Nodename. Or you can preconfigure a config.json so you dont have to enter something and the backup will be full automated. Put that on to a PXE-Server and you can backup over a hundred nodes just with one click.
 
 If you just want to quick backup or wipe some nodes just download the ISO file and use it with an USb-key or you use one of the nice virtual media functions of one of the server-managers out there (iLO, iDRAC, IMM).
 
@@ -42,42 +42,55 @@ If you just want to quick backup or wipe some nodes just download the ISO file a
 The easiest way is to simply use the already done files uploaded under [release](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/release)
 To create a bootable device out of an image or an iso i can recommend [balenaEtcher](https://www.balena.io/etcher/)
 
-### ISO File
+Attention! There are by now only two Keyboard layouts, german and english.
+
+### Boot with ISO File
 Is used to create an USB-Key, burn a CD or to boot it over the boot-virtualmedia function from one of the server-managers out there (iLO, iDRAC, IMM).
 
 Just boot your server with it.
 
-### PXE Server
-I've tested it with teh DRBL(PXE) Debian server ([DRBL HowTo](https://drbl.org/installation/))
+### Boot with Legacy PXE (TFTP) Server
+NOT TESTET! ~~tested it with the TFTP Debian server~~
 
-After you have installed the DRBL Server like in the url described you have to...
+After you have installed the TFTP Server like in the next header described, you have to...
+
+First copy the whole content of [syslinux](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/Raw_ThreefoldNodeMaintainTool/syslinux) except the *cfg files to `/srv/tftp/`
 
 Download the files...
-
 1. [vmlinuz](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/vmlinuz)
 2. [initrd.img](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/initrd.img)
 3. [filesystem.squashfs](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/filesystem.squashfs)
 
-...and copy them to `/srv/tftp/tftpboot/nbi_img/` 
+...and copy them to `/srv/tftp/` 
 
-Next download the menue [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/BackupToolMenue/de_layout/pxelinux.cfg) rename it to `default` and copy it to `/srv/tftp/tftpboot/nbi_img/pxelinux.cfg/`, at end it should be like `/srv/tftp/tftpboot/nbi_img/pxelinux.cfg/default` \
-Change the address pxelinux.cfg `fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs` and `ocs_prerun="busybox tftp -g -r backupnode.sh -l /tmp/backupnode.sh <IPAdress of the PXE Server>"`
+1. Next download the menue [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/BackupToolMenue/de_layout/pxelinux.cfg)
+2. Rename it to `default` and copy it to `/srv/tftp/pxelinux.cfg/`, at end it should be like `/srv/tftp/pxelinux.cfg/default`
+3. Change the addresses in the renamed pxelinux.cfg
+   1. there `fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs` 
+   2. and there `ocs_prerun="busybox tftp -g -r backupnode.sh -l /tmp/backupnode.sh <IPAdress of the PXE Server>"`
 
 
 #### Set up your PXE Server
-apt-get update
+[Original PXE HowTo for Debian](https://wiki.debian.org/PXEBootInstall)
+
+**Simply you just have to run followed things:**\
+apt-get update\
 apt-get install tftpd-hpa
 
-cd /srv/tftp/
-wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/netboot.tar.gz
-wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/pxelinux.0
-tar -xvzf netboot.tar.gz
-rm version.info netboot.tar.gz
+cd /srv/tftp/\
+wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/netboot.tar.gz \
+wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/pxelinux.0 \
+tar -xvzf netboot.tar.gz \
+rm version.info netboot.tar.gz \
 service tftpd-hpa restart
 
+On the DHCP server make sure you enable "network booting" for example in "opnSense" you just have to enter 
+1. `Set next-server IP = <IPAdress of the PXE Server>`
+2. `Set default bios filename = pxelinux.0`
 
+### Boot with UEFI PXE (TFTP) Server
+coming soon
 ## Backup targets
-
 ### SCP
 Is simple to use if you want to backup the nodeseeds to a linux host. Mainly you need to allow ssh access
 
@@ -177,8 +190,15 @@ z -> timeout for user inputs in seconds (default 30)"
 ```
 
 ## preconfigure it for full automation
-If you want to full automate your backup. just fill in in the backupnode.json
+If you want to full automate your backup. Just edit the backupnode.json which is in one of the release ISOs
 
+So download a [release](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/release) anzip it and edit the json.
+Next build a ISO again with `mkisofs -o <output.iso> -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table <inputfolder>`
+
+Hint: The mkisofs you can also use with Windows WSL, but there are also some Windows-Tools which are similar but i haven't tested them. Feel free to try and help make this repo more completely
+
+
+json content example:
 ```json
 {
     "useconfig":true,
