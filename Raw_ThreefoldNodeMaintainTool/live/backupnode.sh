@@ -1,5 +1,6 @@
 #!/bin/bash
 # Author: Florian Gabriel (omniflow)
+# Date: 20220705
 # https://github.com/fl0wm0ti0n
 
 # Begin of the scripts:
@@ -35,11 +36,11 @@ copy_via_scp() {
 
     if [ -n "$g_chmod" ]; then
         write_color "info" "trying to chmod to $g_chmod"
-        sudo sshpass -p "$g_password" ssh -o 'StrictHostKeyChecking no' "$g_user@$g_connectionString" "'sudo chmod $g_chmod $g_remotePath$seedName'"
+        sudo sshpass -p "$g_password" ssh -o 'StrictHostKeyChecking no' "$g_user@$g_connectionString" "'chown $g_chown $g_remotePath$seedName'"
     fi
     if [ -n "$g_chown" ]; then
         write_color "info" "trying to chown to $g_chown"
-        sudo sshpass -p "$g_password" ssh -o 'StrictHostKeyChecking no' "$g_user@$g_connectionString" "'sudo chown $g_chown $g_remotePath$seedName'"
+        sudo sshpass -p "$g_password" ssh -o 'StrictHostKeyChecking no' "$g_user@$g_connectionString" "'chown $g_chown $g_remotePath$seedName'"
     fi
 }
 
@@ -156,9 +157,9 @@ mkdir -p "$g_tempSeedFolder"
 
 if [ "$g_nodeId" = "date" ] || [ -z "$g_nodeId" ] || [ "$g_useDateTimeNaming" = "true" ]; then
     date=$(date +"%m%d%Y%H%M%S")
-    write_color "warn" "no nodeid entered use datetime for naming, seed name will be node_$date.txt"
+    write_color "warn" "use datetime for naming, seed name will be node_$date.txt"
     seedName="node_$date.txt"
-    sudo cp -f "$seedPath" "$g_tempSeedFolder/$seedName.txt"
+    sudo cp -f "$seedPath" "$g_tempSeedFolder/$seedName"
 else
     write_color "info" "seed name will be 'node_$g_nodeId.txt'"
     seedName="node_$g_nodeId.txt"
@@ -319,7 +320,8 @@ write_help() {
     echo "PARAMETERS:"
     echo "n -> nodeId for the naming of the backupfile (write < -n 'date'> of you want to use actual datetime for naming)"
     echo "     [ -n <node id> ] | [ -n date ]"
-    echo "d -> chmod the backupfile to 777 (default disabled)"
+    echo "d -> chmod the backupfile to your choosen mod like for example 777 (default disabled)"
+    echo "     -d <integers>"
     echo "o -> chown the backupfile to a user (default disabled)"
     echo "     -o <user>"
     echo "t -> scp or cifs target string like //10.0.0.2 or 10.0.0.2"
@@ -332,7 +334,9 @@ write_help() {
     echo "     -r </tmp/folder/>"
     echo "y -> Turn on config file for -q and -b options or Overwrite the location of the json configfile as described in option -c"
     echo "     [ -y /tmp/folder/file.json ]|[ -y ]"
-    echo "x -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming, set your farmID"
+    echo "x -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming"
+    echo "     -x"
+    echo "x -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming and set your farmID"
     echo "     -x <farm id>"
     echo "z -> timeout for user inputs in seconds (default 30)"
     echo "     -z <seconds>"
@@ -519,7 +523,7 @@ decide_how_done() {
     g_config=false
     g_useDateTimeNaming=false
 
-while getopts 'bqcmn:usfd:o:t:a:p:r:y:x:z:h:' OPTION; do
+while getopts 'bqcmn:usfd:o:t:a:p:r:y:xg:z:h:' OPTION; do
 case "${OPTION}" in
     b)
         echo "Default Backup Mode choosen"
@@ -588,6 +592,10 @@ case "${OPTION}" in
         echo "Using different path for the configfile $OPTARG"
     ;;
     x)
+        g_gqlNaming=true
+        echo "trying to get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming"
+    ;;
+    g)
         g_farmId="$OPTARG"
         g_gqlNaming=true
         echo "trying to get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming"

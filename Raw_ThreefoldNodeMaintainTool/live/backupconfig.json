@@ -8,7 +8,7 @@
     "_comment3": "empty is disabled, put chmod modus in here",
     "chmod":777,
     "_comment4": "empty is disabled, put username in here",
-    "chown":"flow",
+    "chown":"user",
     "_comment5": "timeout for inputs",
     "timeout":30,
     "_comment6": "possible is usb,scp,cifs,ftp",
@@ -16,22 +16,22 @@
     "remotes":[
         {
             "remoteType":"scp",
-            "user":"root",
-            "password":"eistee",
+            "user":"user",
+            "password":"password",
             "connectionString":"10.0.0.2",
             "remotePath":"/tmp/"
         },
         {
             "remoteType":"ftp",
-            "user":"flow",
-            "password":"eistee",
+            "user":"user",
+            "password":"password",
             "connectionString":"10.0.0.2",
             "remotePath":"/tmp/"
         },
         {
             "remoteType":"cifs",
-            "user":"flow",
-            "password":"eistee",
+            "user":"user",
+            "password":"password",
             "connectionString":"//10.0.0.2/Daten",
             "remotePath":"/Backups/NodeBackups/"
         }

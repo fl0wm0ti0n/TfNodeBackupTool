@@ -320,7 +320,8 @@ write_help() {
     echo "PARAMETERS:"
     echo "n -> nodeId for the naming of the backupfile (write < -n 'date'> of you want to use actual datetime for naming)"
     echo "     [ -n <node id> ] | [ -n date ]"
-    echo "d -> chmod the backupfile to 777 (default disabled)"
+    echo "d -> chmod the backupfile to your choosen mod like for example 777 (default disabled)"
+    echo "     -d <integers>"
     echo "o -> chown the backupfile to a user (default disabled)"
     echo "     -o <user>"
     echo "t -> scp or cifs target string like //10.0.0.2 or 10.0.0.2"
@@ -333,7 +334,9 @@ write_help() {
     echo "     -r </tmp/folder/>"
     echo "y -> Turn on config file for -q and -b options or Overwrite the location of the json configfile as described in option -c"
     echo "     [ -y /tmp/folder/file.json ]|[ -y ]"
-    echo "x -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming, set your farmID"
+    echo "x -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming"
+    echo "     -x"
+    echo "x -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming and set your farmID"
     echo "     -x <farm id>"
     echo "z -> timeout for user inputs in seconds (default 30)"
     echo "     -z <seconds>"
@@ -520,7 +523,7 @@ decide_how_done() {
     g_config=false
     g_useDateTimeNaming=false
 
-while getopts 'bqcmn:usfd:o:t:a:p:r:y:x:z:h:' OPTION; do
+while getopts 'bqcmn:usfd:o:t:a:p:r:y:xg:z:h:' OPTION; do
 case "${OPTION}" in
     b)
         echo "Default Backup Mode choosen"
@@ -589,6 +592,10 @@ case "${OPTION}" in
         echo "Using different path for the configfile $OPTARG"
     ;;
     x)
+        g_gqlNaming=true
+        echo "trying to get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming"
+    ;;
+    g)
         g_farmId="$OPTARG"
         g_gqlNaming=true
         echo "trying to get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming"

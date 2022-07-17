@@ -35,7 +35,7 @@ You can backup your nodeseed, this is a tiny file on one of your nodedisks. It i
 
 If you want to wipe all your disks so you can restore your node again, thats also possible. You can wipe all your disks full automated. Furthermore you can make a memorytest or just go into the shell to make your own stuff.
 
-The aim is to boot it with an USB-Key, a PXE-Server or as ISO for example as Virtual Disk over an server Webinterface like iLO from HPE 
+The aim is to boot it with an USB-Key, a PXE-Server or as ISO for example as Virtual CD/Key over an server Webinterface like iLO from HPE 
 
 There are some nice features like, it searches in the ThreeFold GraphQL API for your Nodename. Or you can preconfigure a config.json so you dont have to enter something and the backup will be full automated. Put that on to a PXE-Server and you can backup over a hundred nodes just with one click.
 
@@ -200,7 +200,7 @@ z -> timeout for user inputs in seconds (default 30)"
 If you want to full automate your backup. Just edit the backupnode.json which is in one of the release ISOs
 
 So download a [release](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/release) un-archive it and edit the json file.
-Next build it back to a ISO again. You can aproach that with `mkisofs -o <output.iso> -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table <inputfolder>`
+Next build it back to a ISO again. You can aproach that with `mkisofs -o <output.iso> -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -l -boot-info-table <inputfolder>`
 
 Hint: The mkisofs you can also use with Windows WSL, but there are also some Windows-Tools which are similar but i haven't tested them. Feel free to try and help make this repo more completely
 
