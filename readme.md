@@ -5,18 +5,18 @@ clonezilla.org, clonezilla.nchc.org.tw\
 THIS SOFTWARE COMES WITH ABSOLUTELY NO WARRANTY! USE AT YOUR OWN RISK!\
 \
 Some Features are only tested with virtual nodes! Feel free to test it or to help in any kind! Any ideas are welcome! Thanks!\
+If you get stuck by using the docu please feel free too contact me!
 \
 \
-Features:
+**Features:**
 - [x] backup nodeseed
 - [x] wipe disks
 - [x] shell
 - [x] memorytest
 - [x] Nice Isolinux menue
 - [x] Script startparameters 
-- [x] boot as ISO
-- [ ] boot as USB-Key
-- [ ] boot via PXE
+- [x] boot with an ISO
+- [x] boot via PXE
 - [x] Search nodeseed on disks
 - [x] Save Nodeseed on...
   - [ ] USB-Key
@@ -50,7 +50,7 @@ Is used to create an USB-Key, burn a CD or to boot it over the boot-virtualmedia
 Just boot your server with it.
 
 ### Boot with Legacy PXE (TFTP) Server
-NOT TESTET! ~~tested it with the TFTP Debian server~~
+NOT TESTED RIGHT NOW! ~~tested it with the TFTP Debian server~~
 
 After you have installed the TFTP Server like in the next header described, you have to...
 
@@ -63,7 +63,9 @@ Download the files...
 
 ...and copy them to `/srv/tftp/` 
 
-1. Next download the menue [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/BackupToolMenue/de_layout/pxelinux.cfg)
+1. Next download the menue 
+   1. DE Layout -> [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/de_layout/pxelinux.cfg)
+   2. EN Layout -> [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/en_layout/pxelinux.cfg)
 2. Rename it to `default` and copy it to `/srv/tftp/pxelinux.cfg/`, at end it should be like `/srv/tftp/pxelinux.cfg/default`
 3. Change the addresses in the renamed pxelinux.cfg
    1. there `fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs` 
@@ -74,15 +76,17 @@ Download the files...
 [Original PXE HowTo for Debian](https://wiki.debian.org/PXEBootInstall)
 
 **Simply you just have to run followed things:**\
-apt-get update\
+```
+apt-get update
 apt-get install tftpd-hpa
 
-cd /srv/tftp/\
-wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/netboot.tar.gz \
-wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/pxelinux.0 \
-tar -xvzf netboot.tar.gz \
-rm version.info netboot.tar.gz \
+cd /srv/tftp/
+wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/netboot.tar.gz
+wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/pxelinux.0
+tar -xvzf netboot.tar.gz
+rm version.info netboot.tar.gz 
 service tftpd-hpa restart
+```
 
 On the DHCP server make sure you enable "network booting" for example in "opnSense" you just have to enter 
 1. `Set next-server IP = <IPAdress of the PXE Server>`
@@ -192,8 +196,8 @@ z -> timeout for user inputs in seconds (default 30)"
 ## preconfigure it for full automation
 If you want to full automate your backup. Just edit the backupnode.json which is in one of the release ISOs
 
-So download a [release](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/release) anzip it and edit the json.
-Next build a ISO again with `mkisofs -o <output.iso> -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table <inputfolder>`
+So download a [release](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/release) un-archive it and edit the json file.
+Next build it back to a ISO again. You can aproach that with `mkisofs -o <output.iso> -b syslinux/isolinux.bin -c syslinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table <inputfolder>`
 
 Hint: The mkisofs you can also use with Windows WSL, but there are also some Windows-Tools which are similar but i haven't tested them. Feel free to try and help make this repo more completely
 
