@@ -30,7 +30,10 @@ If you get stuck by using the docu please feel free too contact me!
 
 
 ## intro
-This is a collection of scripts which are made bootable together with Clonezilla, and a nice Isolinux menue. You can backup your nodeseed, this is a tiny file on one of your nodedisks. It is used to identify your node. You can use that file to recreate your node elswhere. Or if you want to wipe all your disks so you can rfestore your node again. Furthermore you can wipe all your disks full automated, make a memorytest or just go into the shell to make your own stuff.
+This is a collection of scripts which are made bootable together with Clonezilla, and a nice Isolinux menue.\
+You can backup your nodeseed, this is a tiny file on one of your nodedisks. It is used to identify your node. You can use that file to recreate the same node elswhere.
+
+If you want to wipe all your disks so you can restore your node again, thats also possible. You can wipe all your disks full automated. Furthermore you can make a memorytest or just go into the shell to make your own stuff.
 
 The aim is to boot it with an USB-Key, a PXE-Server or as ISO for example as Virtual Disk over an server Webinterface like iLO from HPE 
 
