@@ -192,6 +192,8 @@ y -> Turn on config file for -q and -b options or Overwrite the location of the 
      [ -y /tmp/folder/file.json ]|[ -y ]"
 x -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming, set your farmID"
      -x <farm id>"
+g -> get nodeId from tf-graphQL-API based on NIC-MAC for backupfile naming and set your farmID"
+     -g <farm id>"
 z -> timeout for user inputs in seconds (default 30)"
      -z <seconds>"
 ```
