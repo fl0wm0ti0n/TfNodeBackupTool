@@ -27,7 +27,8 @@ If you get stuck by using the docu please feel free too contact me!
   - [x] Enter NodeId if needed
   - [x] Is automatically choosing DateTime as Backupname if no NodeID is present.
 - [x] json configuration for automatically backupping the nodeseed
-
+- [ ] restore node
+- [ ] backup & wipe a node just by plugging in the key. Beep if done!
 
 ## intro
 This is a collection of scripts which are made bootable together with Clonezilla, and a nice Isolinux menue.\
@@ -53,6 +54,7 @@ Is used to create an USB-Key, burn a CD or to boot it over the boot-virtualmedia
 Just boot your server with it.
 
 ### Boot with Legacy PXE (TFTP) Server
+#### Option 1
 NOT TESTED RIGHT NOW! ~~tested it with the TFTP Debian server~~
 
 After you have installed the TFTP Server like in the next header described, you have to...
@@ -74,6 +76,29 @@ Download the files...
    1. there `fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs` 
    2. and there `ocs_prerun="busybox tftp -g -r backupnode.sh -l /tmp/backupnode.sh <IPAdress of the PXE Server>"`
 
+
+#### Option 2
+NOT TESTED RIGHT NOW! ~~tested it with the TFTP Debian server~~
+
+Create a file named "default" copy following content into it and copy the file into `/srv/tftp/pxelinux.cfg/`, at end it should be like `/srv/tftp/pxelinux.cfg/default`
+
+```
+# /srv/tftp/tfnmt/pxelinux.cfg/default
+UI vesamenu.c32
+
+PROMPT 0
+TIMEOUT 0
+
+MENU DEFAULT NMT
+
+LABEL NMT
+MENU LABEL NMT
+KERNEL /memdisk
+INITRD /ThreefoldNodeMaintainTool_v1.0_DE.ISO iso
+```
+Be aware that the release ISO name is changing over time!
+
+After that is done, copy the release ISO file into `/srv/tftp/`
 
 #### Set up your PXE Server
 [Original PXE HowTo for Debian](https://wiki.debian.org/PXEBootInstall)
