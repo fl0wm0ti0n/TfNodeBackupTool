@@ -29,6 +29,7 @@ If you get stuck by using the docu please feel free too contact me!
 - [x] json configuration for automatically backupping the nodeseed
 - [ ] restore node
 - [ ] backup & wipe a node just by plugging in the key. Beep if done!
+- [ ] ssd healthcheck
 
 ## intro
 This is a collection of scripts which are made bootable together with Clonezilla, and a nice Isolinux menue.\
@@ -275,5 +276,5 @@ json content example:
 }
 ```
 
-## HowTo create a custom CloneZilla whit your ownm scripts?
+## HowTo create a custom CloneZilla with your own scripts?
 coming soon..
