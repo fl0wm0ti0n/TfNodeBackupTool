@@ -29,7 +29,16 @@ If you get stuck by using the docu please feel free too contact me!
 - [x] json configuration for automatically backupping the nodeseed
 - [ ] restore node
 - [ ] backup & wipe a node just by plugging in the key. Beep if done!
+  - [ ] Usb, preconfigured to share
 - [ ] ssd healthcheck
+- [ ] addidional Pxeboot possibilities 
+  - [ ] Backup all nodes
+  - [ ] Restore all nodes
+  - [ ] Switch NET of all nodes
+  - [ ] Only Backup choosen nodes from list (MAC) (graphql)
+  - [ ] Only Restore choosen nodes from list (MAC) (graphql)
+  - [ ] Only Switch NET of choosen nodes from list (MAC) (graphql)
+
 
 ## intro
 This is a collection of scripts which are made bootable together with Clonezilla, and a nice Isolinux menue.\
