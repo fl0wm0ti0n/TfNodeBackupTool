@@ -45,7 +45,7 @@ If you just want to quick backup or wipe some nodes just download the ISO file a
 
 ## Getting started
 The easiest way is to simply use the already done files uploaded under [release](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/release)
-To create a bootable device out of an image or an iso i can recommend [balenaEtcher](https://www.balena.io/etcher/)
+To create a bootable device out of an image or an iso I can recommend [balenaEtcher](https://www.balena.io/etcher/)
 
 Attention! There are by now only two Keyboard layouts, german and english.
 
@@ -55,51 +55,12 @@ Is used to create an USB-Key, burn a CD or to boot it over the boot-virtualmedia
 Just boot your server with it.
 
 ### Boot with Legacy PXE (TFTP) Server
-#### Option 1
-NOT TESTED RIGHT NOW! ~~tested it with the TFTP Debian server~~
-
 After you have installed the TFTP Server like in the next header described, you have to...
 
-First copy the whole content of [syslinux](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/Raw_ThreefoldNodeMaintainTool/syslinux) except the *cfg files to `/srv/tftp/`
-
-Download the files...
-1. [vmlinuz](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/vmlinuz)
-2. [initrd.img](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/initrd.img)
-3. [filesystem.squashfs](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/Raw_ThreefoldNodeMaintainTool/live/filesystem.squashfs)
-
-...and copy them to `/srv/tftp/` 
-
-1. Next download the menue 
-   1. DE Layout -> [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/de_layout/pxelinux.cfg)
-   2. EN Layout -> [pxelinux.cfg](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/blob/master/CustomMenue/en_layout/pxelinux.cfg)
-2. Rename it to `default` and copy it to `/srv/tftp/pxelinux.cfg/`, at end it should be like `/srv/tftp/pxelinux.cfg/default`
-3. Change the addresses in the renamed pxelinux.cfg
-   1. there `fetch=tftp://<IPAdress of the PXE Server>/filesystem.squashfs` 
-   2. and there `ocs_prerun="busybox tftp -g -r backupnode.sh -l /tmp/backupnode.sh <IPAdress of the PXE Server>"`
-
-
-#### Option 2
-NOT TESTED RIGHT NOW! ~~tested it with the TFTP Debian server~~
-
-Create a file named "default" copy following content into it and copy the file into `/srv/tftp/pxelinux.cfg/`, at end it should be like `/srv/tftp/pxelinux.cfg/default`
-
-```
-# /srv/tftp/tfnmt/pxelinux.cfg/default
-UI vesamenu.c32
-
-PROMPT 0
-TIMEOUT 0
-
-MENU DEFAULT NMT
-
-LABEL NMT
-MENU LABEL NMT
-KERNEL /memdisk
-INITRD /ThreefoldNodeMaintainTool_v1.0_DE.ISO iso
-```
-Be aware that the release ISO name is changing over time!
-
-After that is done, copy the release ISO file into `/srv/tftp/`
+Download one of the pxe [release](https://github.com/fl0wm0ti0n/ThreefoldNodeMaintainTool/tree/master/release) archives.
+Unzip it and run `bash getandwritepxeip.sh` in the unzipped directory to set your tftp server address in the bootmenu-file `pxelinux.cfg/default`
+Copy or move the whole content of the unzipped archive to the tftp root-path `/srv/tftp`
+Done!! now you can boot the ThreefoldNodeMaintainTool via PXE if you have configurfed your node and dhcp well!
 
 #### Set up your PXE Server
 [Original PXE HowTo for Debian](https://wiki.debian.org/PXEBootInstall)
@@ -109,11 +70,6 @@ After that is done, copy the release ISO file into `/srv/tftp/`
 apt-get update
 apt-get install tftpd-hpa
 
-cd /srv/tftp/
-wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/netboot.tar.gz
-wget http://ftp.nl.debian.org/debian/dists/buster/main/installer-amd64/current/images/netboot/pxelinux.0
-tar -xvzf netboot.tar.gz
-rm version.info netboot.tar.gz 
 service tftpd-hpa restart
 ```
 
