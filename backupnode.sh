@@ -438,7 +438,6 @@ decide_how_done() {
             umount_disk "$disk"
             # 5. copy to
             copy_to_target "$seedName"
-
         ;;
         "backup")
         # backup and try to get every needed info from all sources and ask user if some infos are missing
