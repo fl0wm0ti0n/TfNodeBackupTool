@@ -247,6 +247,7 @@ do
         break
       fi
 done
+    write_color "info" "NodeID is $g_nodeId"
 }
 
 ask_for_credentials() {
@@ -318,7 +319,7 @@ write_help() {
     echo "s -> Backuptarget = SCP (you must also specify SCP parameters)"
     echo "f -> Backuptarget = CIFS (you must also specify CIFS parameters)"
     echo "PARAMETERS:"
-    echo "n -> nodeId for the naming of the backupfile (write < -n 'date'> of you want to use actual datetime for naming)"
+    echo "n -> nodeId for the naming of the backupfile (write < -n 'date'> if you want to use actual datetime for naming)"
     echo "     [ -n <node id> ] | [ -n date ]"
     echo "d -> chmod the backupfile to your choosen mod like for example 777 (default disabled)"
     echo "     -d <integers>"
@@ -506,7 +507,7 @@ decide_how_done() {
     g_tempSeedFolder="/tmp/seed"
     g_defaultSeedPath="/zos-cache/modules/identityd"
     g_graphQlApi="https://graphql.grid.tf/graphql"
-    g_configPath="/run/live/medium/live/backupconfig.json"
+    g_configPath="/tmp/backupconfig.json"
     g_timeout=30
 
     g_nodeId=""

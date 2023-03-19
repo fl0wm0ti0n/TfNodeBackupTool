@@ -1,7 +1,9 @@
 #!/bin/bash
-# Author: Florian Gabriel (omniflow)
-# Date: 20220705
-# https://github.com/fl0wm0ti0n
+# Author:   Florian Gabriel (omniflow)
+# Repo:     https://github.com/fl0wm0ti0n
+# Date:     20230319
+# Purpose:  Switches the Threefold Network
+
 
 # Begin of the scripts:
 # Load DRBL setting and functions
@@ -24,21 +26,10 @@ dhclient
 
 # functions
 
+# get host ip
+ip=$(hostname -I | awk '{print $1}')
 
-# search_disks
+# write to pxelinux.cfg/default
+cat pxelinux.cfg/default | sed "s/10.0.0.26/$ip/g" > default
+mv default pxelinux.cfg/default
 
-# mount device 
-    # specific or that with the actual seed on it.
-    # choose or search_seed
-# umount device
-
-# Copy from remote
-    # cifs, scp, ftp ...
-
-# restore seeds
-
-# check which MAC and restore like with it was before saved in tf GraphQl
-
-# read Config
-
-# get arguments

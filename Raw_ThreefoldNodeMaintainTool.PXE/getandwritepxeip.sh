@@ -11,4 +11,4 @@ ip=$(hostname -I | awk '{print $1}')
 
 # write to pxelinux.cfg/default
 cat pxelinux.cfg/default | sed "s/10.0.0.26/$ip/g" > default
-mv default1 pxelinux.cfg/default
+mv default pxelinux.cfg/default

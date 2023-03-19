@@ -25,7 +25,7 @@ dhclient
 # functions
 copy_via_scp() {    
     local seedName=$1
-
+    
     if ! sudo sshpass -p "$g_password" scp -o 'StrictHostKeyChecking no' "$g_tempSeedFolder/$seedName" "$g_user@$g_connectionString:$g_remotePath";
     then
         write_color "fail" "scp copy failed"
@@ -49,7 +49,8 @@ copy_via_cifs() {
 
     mkdir -p "$g_tempCifsMntFolder"
 
-    if ! sudo mount -t cifs -o username="$g_user",password="$g_password",uid=33,gid=33,file_mode=0770,dir_mode=0770 "$g_connectionString$g_remotePath" "$g_tempCifsMntFolder";
+    if ! sudo mount.cifs "$g_connectionString$g_remotePath" "$g_tempCifsMntFolder" -o username="$g_user",password="$g_password",uid=33,gid=33,file_mode=0770,dir_mode=0770;
+    #if ! sudo mount -t cifs -o username="$g_user",password="$g_password",uid=33,gid=33,file_mode=0770,dir_mode=0770 "$g_connectionString$g_remotePath" "$g_tempCifsMntFolder";
     then
         write_color "fail" "cifs mount failed"
         termination
@@ -67,11 +68,11 @@ copy_via_cifs() {
 
     if [ -n "$g_chmod" ]; then
         write_color "info" "trying to chmod to $g_chmod"
-        sudo chmod "$g_chmod" "$g_tempCifsMntFolder$g_remotePath$seedName"
+        sudo chmod "$g_chmod" "$g_tempCifsMntFolder/$seedName"
     fi
     if [ -n "$g_chown" ]; then
         write_color "info" "trying to chown to $g_chown"
-        sudo chown "$g_chmod" "$g_tempCifsMntFolder$g_remotePath$seedName"
+        sudo chown "$g_chmod" "$g_tempCifsMntFolder/$seedName"
     fi
 }
 
@@ -106,11 +107,31 @@ search_disks() {
     fi
 }
 
+# old search_seed() function
+# search_seed() {
+#     seedPath=$1
+#     temp=$(sudo ls "$g_tempMntFolder$g_defaultSeedPath")
+#     if [ "$temp" = "seed.txt" ]; then
+#         seedPath="$g_tempMntFolder$g_defaultSeedPath/$temp"
+#     else
+#         seedPath=""
+#     fi
+# }
+
 search_seed() {
     seedPath=$1
     temp=$(sudo ls "$g_tempMntFolder$g_defaultSeedPath")
-    if [ "$temp" = "seed.txt" ]; then
+    numFiles=$(echo "$temp" | wc -l)
+    if [ "$numFiles" = "1" ] && [ "$temp" = "seed.txt" ]; then
         seedPath="$g_tempMntFolder$g_defaultSeedPath/$temp"
+    elif [ "$numFiles" = "2" ]; then
+        file1=$(echo "$temp" | awk 'NR==1')
+        file2=$(echo "$temp" | awk 'NR==2')
+        if [ "$file1" = "seed.txt" ]; then
+            seedPath="$g_tempMntFolder$g_defaultSeedPath/$file1"
+        elif [ "$file2" = "seed.txt" ]; then
+            seedPath="$g_tempMntFolder$g_defaultSeedPath/$file2"
+        fi
     else
         seedPath=""
     fi
@@ -247,6 +268,7 @@ do
         break
       fi
 done
+    write_color "info" "NodeID is $g_nodeId"
 }
 
 ask_for_credentials() {
@@ -318,7 +340,7 @@ write_help() {
     echo "s -> Backuptarget = SCP (you must also specify SCP parameters)"
     echo "f -> Backuptarget = CIFS (you must also specify CIFS parameters)"
     echo "PARAMETERS:"
-    echo "n -> nodeId for the naming of the backupfile (write < -n 'date'> of you want to use actual datetime for naming)"
+    echo "n -> nodeId for the naming of the backupfile (write < -n 'date'> if you want to use actual datetime for naming)"
     echo "     [ -n <node id> ] | [ -n date ]"
     echo "d -> chmod the backupfile to your choosen mod like for example 777 (default disabled)"
     echo "     -d <integers>"
@@ -438,6 +460,7 @@ decide_how_done() {
             umount_disk "$disk"
             # 5. copy to
             copy_to_target "$seedName"
+
         ;;
         "backup")
         # backup and try to get every needed info from all sources and ask user if some infos are missing
@@ -505,7 +528,7 @@ decide_how_done() {
     g_tempSeedFolder="/tmp/seed"
     g_defaultSeedPath="/zos-cache/modules/identityd"
     g_graphQlApi="https://graphql.grid.tf/graphql"
-    g_configPath="/run/live/medium/live/backupconfig.json"
+    g_configPath="/tmp/backupconfig.json"
     g_timeout=30
 
     g_nodeId=""
