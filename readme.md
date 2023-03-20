@@ -26,7 +26,11 @@ If you get stuck by using the docu please feel free too contact me!
   - [x] Get NodeId from GraphQl over NIC MAC
   - [x] Enter NodeId if needed
   - [x] Is automatically choosing DateTime as Backupname if no NodeID is present.
-- [x] json configuration for automatically backupping the nodeseed
+- [x] json configuration - automatically ...
+  - [ ] backup the nodeseed
+  - [ ] wipe nodes
+  - [ ] restore nodes
+  - [ ] switch net
 - [ ] restore node
 - [ ] backup & wipe a node just by plugging in the key. Beep if done!
   - [ ] Usb, preconfigured to share
@@ -35,9 +39,11 @@ If you get stuck by using the docu please feel free too contact me!
   - [ ] Backup all nodes
   - [ ] Restore all nodes
   - [ ] Switch NET of all nodes
+  - [ ] Switch NET of one node via MAC
   - [ ] Only Backup choosen nodes from list (MAC) (graphql)
   - [ ] Only Restore choosen nodes from list (MAC) (graphql)
   - [ ] Only Switch NET of choosen nodes from list (MAC) (graphql)
+  - [ ] save state of all nodes as csv on tftp server
 
 
 ## intro
