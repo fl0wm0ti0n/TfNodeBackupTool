@@ -32,7 +32,7 @@ noescape 1
 
 # MENU MASTER PASSWD
 say **********************************************************************
-Configured TFTP IP: 10.0.0.26 (if wrong run getandwritepxeip.sh)
+say Configured TFTP IP: 10.0.0.26 (if wrong run getandwritepxeip.sh)
 say **********************************************************************
 say omniflow.cc | Backup and Wipe Threefold Node Tool
 say This Tool uses sources from Clonezilla as base!

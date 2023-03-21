@@ -27,7 +27,7 @@ If you get stuck by using the docu please feel free too contact me!
   - [x] Enter NodeId if needed
   - [x] Is automatically choosing DateTime as Backupname if no NodeID is present.
 - [x] json configuration - automatically ...
-  - [ ] backup the nodeseed
+  - [x] backup the nodeseed
   - [ ] wipe nodes
   - [ ] restore nodes
   - [ ] switch net
